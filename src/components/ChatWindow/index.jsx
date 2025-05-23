@@ -1,76 +1,56 @@
-import React from "react";
-import SessionId from "../SessionId";
-import useChatHistory from "@/hooks/chat/useChatHistory";
-import ChatContainer from "./ChatPage/ChatContainer";
-import Sponsor from "../Sponsor";
-import { ChatHistoryLoading } from "./ChatPage/ChatContainer/ChatHistory";
-// import ResetChat from "../ResetChat";
-import NavigationBar from "./Shared/Footer";
-import ChatPageHeader from "./ChatPage/Header";
-
 // implement another hook for active screen in local storage and use it here
 // this is the main for this codebase
 // implement routing here
 
-export default function ChatWindow({ closeChat, settings, sessionId }) {
-  // fetch all chats history if last active page is messages
-  // fetch recent chat name if last active page is home
-  // fetch recent chats history if last active page is chat
-  const { chatHistory, setChatHistory, loading } = useChatHistory(settings, sessionId);
+import React, { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import HomePage from "./HomePage";
+import ChatPage from "./ChatPage";
+import useSessionId from "@/hooks/useSessionId";
+import MessagesPage from "./MessagesPage";
 
-  const handleNewChat = () => {
-    console.log("New chat");
+function ChatWindow({ closeChat, settings }) {
+  const navigate = useNavigate();
+  const [activeScreen, setActiveScreen] = useState("");
+
+  const handleNavigate = (location) => navigate(`/${location}`);
+  const handleNavClick = (screen) => {
+    setActiveScreen(screen);
+    handleNavigate(screen);
   };
 
-  // see if loading is needed for home page since only recent messages needs to be fetched.
-  if (loading) {
-    return (
-      <div className="allm-flex allm-flex-col allm-h-full">
-        {/* Header component place*/}
-        <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} />
-        <ChatHistoryLoading />
-        <div className="allm-pt-4 allm-pb-2 allm-h-fit allm-gap-y-1">
-          <SessionId />
-          <Sponsor settings={settings} />
-        </div>
-      </div>
-    );
-  }
-
-  // no code snippets so this is unnecessary.
-  setEventDelegatorForCodeSnippets();
+  const handleStartNewChat = (initialQuestion = null) => {
+    const newSessionId = useSessionId({ createNewSessionId: true });
+    navigate(`/chat/${newSessionId}`);
+    // TODO: Handle Recent Messages Here
+    // In a real app, you might also store the initial question in state
+    // so ChatPage can pick it up. For this example, ChatPage will just log it.
+    console.log("New chat started with ID:", newSessionId, "Initial question:", initialQuestion);
+  };
 
   return (
     <div className="allm-flex allm-flex-col allm-h-full allm-font-sans allm-text-sm">
-      {/* Header component place*/}
-      {/* {!settings.noHeader && ( */}
-      <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} />
-      {/* )} */}
-      <div className="allm-flex-grow allm-overflow-y-auto">
-        <ChatContainer sessionId={sessionId} settings={settings} knownHistory={chatHistory} />
-      </div>
-      <div className="allm-flex allm-flex-col allm-gap-2.5 allm-h-[98px] allm-w-full allm-pt-4">
-        <NavigationBar
-          activeScreen="messages"
-          onNavClick={(screen) => {
-            if (screen === "home") {
-              closeChat();
-            }
-          }}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              onStartNewChat={handleStartNewChat}
+              onNavClick={handleNavClick}
+              onNavigate={handleNavigate}
+              settings={settings}
+              activeScreen={activeScreen}
+            />
+          }
         />
-        <div className="allm-py-2.5">
-          <Sponsor settings={settings} />
-          {/* <ResetChat
-          setChatHistory={setChatHistory}
-          settings={settings}
-          sessionId={sessionId}
-          closeChat={closeChat}
-        /> */}
-        </div>
-      </div>
+        <Route path="/chat/:sessionId" element={<ChatPage closeChat={closeChat} settings={settings} onNavigate={handleNavigate} />} />
+        <Route path="/messages" element={<MessagesPage onStartNewChat={handleStartNewChat} settings={settings} onNavClick={handleNavClick} onNavigate={handleNavigate} activeScreen={activeScreen} />} />
+      </Routes>
     </div>
   );
 }
+
+export default ChatWindow;
 
 // Enables us to safely markdown and sanitize all responses without risk of injection
 // but still be able to attach a handler to copy code snippets on all elements

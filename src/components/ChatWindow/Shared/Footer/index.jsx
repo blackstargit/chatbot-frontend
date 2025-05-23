@@ -1,6 +1,5 @@
 // src/components/ChatWindow/Shared/Footer/index.jsx
-import { MessengerLogo, House, Chats } from "@phosphor-icons/react";
-import { HouseSimple } from "@phosphor-icons/react/dist/ssr";
+import { House, Chats } from "@phosphor-icons/react";
 import React from "react";
 
 /**
@@ -25,16 +24,16 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
     >
       {/* Home Button */}
       <button
-        onClick={() => onNavClick("home")}
+        onClick={() => onNavClick("")}
         className={`
           allm-flex allm-flex-col allm-items-center allm-gap-[5px]
           allm-text-sm allm-font-medium
-          ${activeScreen === "home" ? "allm-text-black allm-text-extrabold" : "allm-text-gray-500"}
+          ${activeScreen === "" ? "allm-text-black allm-text-extrabold" : "allm-text-gray-500"}
           allm-duration-200 allm-border-0 allm-bg-transparent
         `}
         aria-label="Go to Home page"
       >
-        {activeScreen === "home" ? <House size={30} weight="fill" /> : <House size={30} />}
+        {activeScreen === "" ? <House size={30} weight="fill" /> : <House size={30} />}
         <span>Home</span>
       </button>
 
@@ -49,7 +48,7 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
         `}
         aria-label="Go to Messages"
       >
-        {activeScreen === "home" ? <Chats size={30} /> : <Chats size={30} weight="fill" />}
+        {activeScreen === "messages" ? <Chats size={30} /> : <Chats size={30} weight="fill" />}
         <span>Messages</span>
       </button>
     </nav>
