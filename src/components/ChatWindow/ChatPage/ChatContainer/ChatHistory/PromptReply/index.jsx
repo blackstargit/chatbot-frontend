@@ -2,9 +2,9 @@ import { forwardRef, memo, useState } from "react";
 import { Warning, CircleNotch, CaretDown } from "@phosphor-icons/react";
 import renderMarkdown from "@/utils/chat/markdown";
 import { embedderSettings } from "@/main";
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
 import { formatDate } from "@/utils/date";
 
+const assistantIcon = "https://i.ibb.co/5WJfXJ0x/bg-white-bot.png";
 const ThinkingIndicator = ({ hasThought }) => {
   if (hasThought) {
     return (
@@ -84,12 +84,11 @@ const PromptReply = forwardRef(
       return (
         <div className="allm-py-[5px]">
           <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-            {embedderSettings.settings.assistantName ||
-              "Anything LLM Chat Assistant"}
+            {embedderSettings.settings.assistantName || "Alphabot"}
           </div>
           <div className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
             <img
-              src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+              src={embedderSettings.settings.assistantIcon || assistantIcon}
               alt="Anything LLM Icon"
               className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
             />
@@ -100,9 +99,7 @@ const PromptReply = forwardRef(
               }}
               className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base} allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
             >
-              {hasIncompleteThinkTag && streamingThought && (
-                <ThoughtBubble thought={streamingThought} />
-              )}
+              {hasIncompleteThinkTag && streamingThought && <ThoughtBubble thought={streamingThought} />}
               <ThinkingIndicator hasThought={hasIncompleteThinkTag} />
             </div>
           </div>
@@ -114,20 +111,18 @@ const PromptReply = forwardRef(
       return (
         <div className="allm-py-[5px]">
           <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-            {embedderSettings.settings.assistantName ||
-              "Anything LLM Chat Assistant"}
+            {embedderSettings.settings.assistantName || "Alphabot"}
           </div>
           <div className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
             <img
-              src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+              src={embedderSettings.settings.assistantIcon || assistantIcon}
               alt="Anything LLM Icon"
               className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
             />
             <div className="allm-py-[11px] allm-px-4 allm-rounded-lg allm-flex allm-flex-col allm-bg-red-200 allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)] allm-mr-[37px] allm-ml-[9px]">
               <div className="allm-flex allm-gap-x-5">
                 <span className="allm-inline-block allm-p-2 allm-rounded-lg allm-bg-red-50 allm-text-red-500">
-                  <Warning className="allm-h-4 allm-w-4 allm-mb-1 allm-inline-block" />{" "}
-                  Could not respond to message.
+                  <Warning className="allm-h-4 allm-w-4 allm-mb-1 allm-inline-block" /> Could not respond to message.
                   <span className="allm-text-xs">Server error</span>
                 </span>
               </div>
@@ -140,16 +135,11 @@ const PromptReply = forwardRef(
     return (
       <div className="allm-py-[5px]">
         <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-          {embedderSettings.settings.assistantName ||
-            "Anything LLM Chat Assistant"}
+          {embedderSettings.settings.assistantName || "Alphabot"}
         </div>
-        <div
-          key={uuid}
-          ref={ref}
-          className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start"
-        >
+        <div key={uuid} ref={ref} className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
           <img
-            src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+            src={embedderSettings.settings.assistantIcon || assistantIcon}
             alt="Anything LLM Icon"
             className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
           />
@@ -160,9 +150,7 @@ const PromptReply = forwardRef(
             }}
             className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base} allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
           >
-            {thoughts.length > 0 && (
-              <ThoughtBubble thought={thoughts.join("\n\n")} />
-            )}
+            {thoughts.length > 0 && <ThoughtBubble thought={thoughts.join("\n\n")} />}
             <div className="allm-flex allm-gap-x-5">
               <span
                 className="allm-font-sans allm-reply allm-whitespace-pre-line allm-font-normal allm-text-sm allm-md:text-sm allm-flex allm-flex-col allm-gap-y-1"
@@ -174,9 +162,7 @@ const PromptReply = forwardRef(
           </div>
         </div>
         {sentAt && (
-          <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mt-2 allm-text-left allm-font-sans">
-            {formatDate(sentAt)}
-          </div>
+          <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mt-2 allm-text-left allm-font-sans">{formatDate(sentAt)}</div>
         )}
       </div>
     );

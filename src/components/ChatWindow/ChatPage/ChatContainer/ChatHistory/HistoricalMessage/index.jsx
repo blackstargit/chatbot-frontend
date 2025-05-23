@@ -4,8 +4,9 @@ import renderMarkdown from "@/utils/chat/markdown";
 import DOMPurify from "@/utils/chat/purify";
 import { embedderSettings } from "@/main";
 import { v4 } from "uuid";
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
 import { formatDate } from "@/utils/date";
+
+const assistantIcon = "https://i.ibb.co/5WJfXJ0x/bg-white-bot.png";
 
 const ThoughtBubble = ({ thought }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -69,7 +70,7 @@ const HistoricalMessage = forwardRef(
         {role === "assistant" && (
           <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
             {embedderSettings.settings.assistantName ||
-              "Anything LLM Chat Assistant"}
+              "Alphabot"}
           </div>
         )}
         <div
@@ -81,7 +82,7 @@ const HistoricalMessage = forwardRef(
         >
           {role === "assistant" && (
             <img
-              src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
+              src={embedderSettings.settings.assistantIcon || assistantIcon}
               alt="Anything LLM Icon"
               className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
               id="anything-llm-icon"
