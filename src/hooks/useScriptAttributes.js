@@ -13,17 +13,12 @@ const DEFAULT_SETTINGS = {
 
   // style parameters
   chatIcon: "plus",
-  brandImageUrl: null, // will be forced into 100x50px container
   greeting: null, // empty chat window greeting.
   buttonColor: "#262626", // must be hex color code
   userBgColor: "#2C2F35", // user text bubble color
   assistantBgColor: "#2563eb", // assistant text bubble color
   noSponsor: null, // Shows sponsor in footer of chat
-  sponsorText: "Powered by Alphabase", // default sponsor text
-  sponsorLink: "https://alphabase.co", // default sponsor link
   position: "bottom-right", // position of chat button/window
-  assistantName: "Alphabase Chat Assistant", // default assistant name
-  assistantIcon: null, // default assistant icon
   windowHeight: null, // height of chat window in number:css-prefix
   windowWidth: null, // width of chat window in number:css-prefix
   textSize: null, // text size in px (number only)
@@ -37,7 +32,16 @@ const DEFAULT_SETTINGS = {
   supportEmail: null, // string of email for contact
   username: null, // The display or readable name set on a script
   defaultMessages: [], // list of strings for default messages.
+
+  // Permanent
+  brandImageUrl: "https://framerusercontent.com/images/OJTBlYkWEYh1WN4Ylt1HSog.png", // PERMANENT: will be forced into 100x50px container
+  sponsorText: "Powered by Alphabase", // PERMANENT: default sponsor text
+  sponsorLink: "https://alphabase.co", // PERMANENT: default sponsor link
+  assistantName: "Alphabot", // PERMANENT: default assistant name
+  assistantIcon: "https://i.ibb.co/5WJfXJ0x/bg-white-bot.png", // PERMANENT: default assistant icon
 };
+
+const PERMANENT_KEYS = ["brandImageUrl", "sponsorText", "sponsorLink", "assistantName", "assistantIcon"];
 
 export default function useGetScriptAttributes() {
   const [settings, setSettings] = useState({
@@ -48,24 +52,26 @@ export default function useGetScriptAttributes() {
   useEffect(() => {
     function fetchAttribs() {
       if (!document) return false;
-      if (
-        !embedderSettings.settings.baseApiUrl ||
-        !embedderSettings.settings.embedId
-      )
-        throw new Error(
-          "[AnythingLLM Embed Module::Abort] - Invalid script tag setup detected. Missing required parameters for boot!"
-        );
+      if (!embedderSettings.settings.baseApiUrl || !embedderSettings.settings.embedId)
+        throw new Error("[AnythingLLM Embed Module::Abort] - Invalid script tag setup detected. Missing required parameters for boot!");
 
-      setSettings({
-        ...DEFAULT_SETTINGS,
-        ...parseAndValidateEmbedSettings(embedderSettings.settings),
-        loaded: true,
-      });
+      const updatedSettings = { ...DEFAULT_SETTINGS, ...removePermanentKeys(parseAndValidateEmbedSettings(embedderSettings.settings)), loaded: true };
+      setSettings(updatedSettings);
     }
     fetchAttribs();
   }, [document]);
 
   return settings;
+}
+
+function removePermanentKeys(settings) {
+  const sanitized = { ...settings };
+  PERMANENT_KEYS.forEach((key) => {
+    if (key in sanitized) {
+      console.log(key, sanitized[key]);
+      delete sanitized[key];}
+  });
+  return sanitized;
 }
 
 const validations = {
@@ -77,14 +83,8 @@ const validations = {
     if (typeof value !== "string") return this._fallbacks.defaultMessages;
     try {
       const list = value.split(",");
-      if (
-        !Array.isArray(list) ||
-        list.length === 0 ||
-        !list.every((v) => typeof v === "string" && v.length > 0)
-      )
-        throw new Error(
-          "Invalid default-messages attribute value. Must be array of strings"
-        );
+      if (!Array.isArray(list) || list.length === 0 || !list.every((v) => typeof v === "string" && v.length > 0))
+        throw new Error("Invalid default-messages attribute value. Must be array of strings");
       return list.map((v) => v.trim());
     } catch (e) {
       console.error("AnythingLLMEmbed", e);
