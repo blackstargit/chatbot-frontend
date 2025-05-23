@@ -41,8 +41,6 @@ const DEFAULT_SETTINGS = {
   assistantIcon: "https://i.ibb.co/5WJfXJ0x/bg-white-bot.png", // PERMANENT: default assistant icon
 };
 
-const PERMANENT_KEYS = ["brandImageUrl", "sponsorText", "sponsorLink", "assistantName", "assistantIcon"];
-
 export default function useGetScriptAttributes() {
   const [settings, setSettings] = useState({
     loaded: false,
@@ -56,23 +54,13 @@ export default function useGetScriptAttributes() {
         throw new Error("[AnythingLLM Embed Module::Abort] - Invalid script tag setup detected. Missing required parameters for boot!");
       
       // bizarre problem/errorL assistantName and assistantIcon are not being set from script attributes 
-      const updatedSettings = { ...DEFAULT_SETTINGS, ...removePermanentKeys(parseAndValidateEmbedSettings(embedderSettings.settings)), loaded: true };
+      const updatedSettings = { ...DEFAULT_SETTINGS, ...parseAndValidateEmbedSettings(embedderSettings.settings), loaded: true };
       setSettings(updatedSettings);
     }
     fetchAttribs();
   }, [document]);
 
   return settings;
-}
-
-function removePermanentKeys(settings) {
-  const sanitized = { ...settings };
-  PERMANENT_KEYS.forEach((key) => {
-    if (key in sanitized) {
-      console.log(key, sanitized[key]);
-      delete sanitized[key];}
-  });
-  return sanitized;
 }
 
 const validations = {

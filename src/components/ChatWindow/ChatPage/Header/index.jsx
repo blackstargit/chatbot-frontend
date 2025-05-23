@@ -13,6 +13,7 @@ export default function ChatPageHeader({
   iconUrl = null,
   closeChat, // This prop is for closing the entire chatbot window
   onStartNewChat, // New prop: function to start a new chat session
+  onNavigate
 }) {
   const [showingOptions, setShowOptions] = useState(false);
   const menuRef = useRef();
@@ -39,8 +40,7 @@ export default function ChatPageHeader({
   }, [menuRef, buttonRef]); // Added buttonRef to dependencies
 
   const handleBackToHome = () => {
-    // navigate("/"); // Navigate back to the Home page route
-    console.log("Navigate to home");
+    onNavigate(""); // Navigate back to the Home page route
   };
 
   return (
@@ -74,7 +74,7 @@ export default function ChatPageHeader({
 
             {/* Title and Subtitle */}
             <div className="allm-flex allm-flex-col allm-align-center allm-justify-start">
-              <h1 className="allm-text-md allm-p-0 allm-m-0">Answer Hub</h1>
+              <p className="allm-text-md allm-font-medium allm-p-0 allm-m-0">Answer Hub</p>
               <p className="allm-text-xs allm-p-0 allm-m-0">Your AI-powered assistant.</p>
             </div>
           </div>

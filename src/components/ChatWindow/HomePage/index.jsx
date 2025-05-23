@@ -107,7 +107,7 @@ const HomePage = ({ onNavClick, onNavigate, activeScreen, settings, onStartNewCh
 
       <div className="allm-flex allm-flex-col allm-gap-2.5 allm-h-[98px] allm-w-full allm-pt-4">
         <NavigationBar activeScreen={activeScreen} onNavClick={onNavClick} />
-        <Sponsor settings={settings} />
+        <Sponsor />
       </div>
     </div>
   );

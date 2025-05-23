@@ -71,7 +71,7 @@ export default {
       },
       fontFamily: {
         sans: [
-          "roboto",
+          "Roboto",
           "plus-jakarta-sans",
           "ui-sans-serif",
           "system-ui",

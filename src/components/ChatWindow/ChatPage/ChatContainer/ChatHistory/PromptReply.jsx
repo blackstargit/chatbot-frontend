@@ -85,22 +85,25 @@ const PromptReply = forwardRef(
     if (isThinking) {
       return (
         <div className="allm-py-[5px]">
-          <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-            {embedderSettings.settings.assistantName || "Alphabot"}
-          </div>
           <div className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
-            <img
-              src={embedderSettings.settings.assistantIcon || assistantIcon}
-              alt="Anything LLM Icon"
-              className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
-            />
             <div
               style={{
                 wordBreak: "break-word",
                 backgroundColor: embedderSettings.ASSISTANT_STYLES.msgBg,
               }}
-              className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base} allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
+              className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base} `} // shadow change here
             >
+              <div className="allm-flex allm-flex-row allm-items-center allm-gap-x-2 allm-h-[20px] allm-pb-2">
+                <img
+                  src={embedderSettings.settings.assistantIcon || assistantIcon}
+                  alt="Alphabot"
+                  className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
+                  id="anything-llm-icon"
+                />
+                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+                  {embedderSettings.settings.assistantName || "Alphabot"}
+                </div>
+              </div>
               {hasIncompleteThinkTag && streamingThought && <ThoughtBubble thought={streamingThought} />}
               <ThinkingIndicator hasThought={hasIncompleteThinkTag} />
             </div>
@@ -112,16 +115,19 @@ const PromptReply = forwardRef(
     if (error) {
       return (
         <div className="allm-py-[5px]">
-          <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-            {embedderSettings.settings.assistantName || "Alphabot"}
-          </div>
           <div className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
-            <img
-              src={embedderSettings.settings.assistantIcon || assistantIcon}
-              alt="Anything LLM Icon"
-              className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
-            />
-            <div className="allm-py-[11px] allm-px-4 allm-rounded-lg allm-flex allm-flex-col allm-bg-red-200 allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)] allm-mr-[37px] allm-ml-[9px]">
+            <div className="allm-py-[11px] allm-px-4 allm-rounded-lg allm-flex allm-flex-col allm-bg-red-200 allm-mr-[37px] allm-ml-[9px]">
+              <div className="allm-flex allm-flex-row allm-items-center allm-gap-x-2 allm-h-[20px] allm-pb-2">
+                <img
+                  src={embedderSettings.settings.assistantIcon || assistantIcon}
+                  alt="Alphabot"
+                  className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
+                  id="anything-llm-icon"
+                />
+                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+                  {embedderSettings.settings.assistantName || "Alphabot"}
+                </div>
+              </div>
               <div className="allm-flex allm-gap-x-5">
                 <span className="allm-inline-block allm-p-2 allm-rounded-lg allm-bg-red-50 allm-text-red-500">
                   <Warning className="allm-h-4 allm-w-4 allm-mb-1 allm-inline-block" /> Could not respond to message.
@@ -136,22 +142,25 @@ const PromptReply = forwardRef(
 
     return (
       <div className="allm-py-[5px]">
-        <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans">
-          {embedderSettings.settings.assistantName || "Alphabot"}
-        </div>
         <div key={uuid} ref={ref} className="allm-flex allm-items-start allm-w-full allm-h-fit allm-justify-start">
-          <img
-            src={embedderSettings.settings.assistantIcon || assistantIcon}
-            alt="Anything LLM Icon"
-            className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2"
-          />
           <div
             style={{
               wordBreak: "break-word",
               backgroundColor: embedderSettings.ASSISTANT_STYLES.msgBg,
             }}
-            className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base} allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
+            className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${embedderSettings.ASSISTANT_STYLES.base}`} // shadow change here
           >
+            <div className="allm-flex allm-flex-row allm-items-center allm-gap-x-2 allm-h-[20px] allm-pb-2">
+              <img
+                src={embedderSettings.settings.assistantIcon || assistantIcon}
+                alt="Alphabot"
+                className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
+                id="anything-llm-icon"
+              />
+              <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+                {embedderSettings.settings.assistantName || "Alphabot"}
+              </div>
+            </div>
             {thoughts.length > 0 && <ThoughtBubble thought={thoughts.join("\n\n")} />}
             <div className="allm-flex allm-gap-x-5">
               <span
@@ -163,9 +172,6 @@ const PromptReply = forwardRef(
             </div>
           </div>
         </div>
-        {sentAt && (
-          <div className="allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mt-2 allm-text-left allm-font-sans">{formatDate(sentAt)}</div>
-        )}
       </div>
     );
   }

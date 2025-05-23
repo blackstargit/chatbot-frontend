@@ -1,12 +1,9 @@
 import debounce from "lodash.debounce";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, CircleNotch } from "@phosphor-icons/react";
-
-import { embedderSettings } from "@/main";
+import { ArrowDown } from "@phosphor-icons/react";
 
 import HistoricalMessage from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory/HistoricalMessage";
 import PromptReply from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory/PromptReply";
-import { SEND_TEXT_EVENT } from "@/components/ChatWindow/ChatPage/ChatContainer";
 
 export default function ChatHistory({ settings = {}, history = [] }) {
   const replyRef = useRef(null);
@@ -46,25 +43,24 @@ export default function ChatHistory({ settings = {}, history = [] }) {
   };
 
   // TODO: Convert to Home Page Here, change logic too
-  if (history.length === 0) {
-    return (
-      <div className="allm-h-full allm-overflow-y-auto allm-px-2 allm-py-4 allm-flex allm-flex-col allm-justify-start allm-no-scroll">
-        <div className="allm-flex allm-h-full allm-flex-col allm-items-center allm-justify-center">
-          <p className="allm-text-slate-400 allm-text-sm allm-font-sans allm-py-4 allm-text-center">{settings?.greeting ?? "Send a chat to get started."}</p>
-          <SuggestedMessages settings={settings} />
-        </div>
-      </div>
-    );
-  }
+  // if (history.length === 0) {
+  //   return (
+  //     <div className="allm-h-full allm-overflow-y-auto allm-px-2 allm-py-4 allm-flex allm-flex-col allm-justify-start allm-no-scroll">
+  //       <div className="allm-flex allm-h-full allm-flex-col allm-items-center allm-justify-center">
+  //         <p className="allm-text-slate-400 allm-text-sm allm-font-sans allm-py-4 allm-text-center">{settings?.greeting ?? "Send a chat to get started."}</p>
+  //         <SuggestedQuestions settings={settings} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
-    // Here is chat page transcript
     <div
-      className="allm-h-full allm-overflow-y-auto allm-px-2 allm-pt-4 allm-pb-8 allm-flex allm-flex-col allm-justify-start allm-no-scroll"
+      className="allm-h-full allm-overflow-y-auto allm-px-2 allm-pt-4 allm-pb-10 allm-flex allm-flex-col allm-justify-start allm-no-scroll"
       id="chat-history"
       ref={chatHistoryRef}
     >
-      <div className="allm-flex allm-flex-col allm-gap-y-4">
+      <div className="allm-flex allm-flex-col allm-gap-y-2">
         {history.map((props, index) => {
           const isLastMessage = index === history.length - 1;
           const isLastBotReply = index === history.length - 1 && props.role === "assistant";
@@ -115,46 +111,6 @@ export default function ChatHistory({ settings = {}, history = [] }) {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-export function ChatHistoryLoading() {
-  return (
-    <div className="allm-h-full allm-w-full allm-relative">
-      <div className="allm-h-full allm-max-h-[82vh] allm-pb-[100px] allm-pt-[5px] allm-bg-gray-100 allm-rounded-lg allm-px-2 allm-h-full allm-mt-2 allm-gap-y-2 allm-overflow-y-scroll allm-flex allm-flex-col allm-justify-start allm-no-scroll">
-        <div className="allm-flex allm-h-full allm-flex-col allm-items-center allm-justify-center">
-          <CircleNotch size={14} className="allm-text-slate-400 allm-animate-spin" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// implementation: Starter Message
-function SuggestedMessages({ settings }) {
-  if (!settings?.defaultMessages?.length) return null;
-
-  return (
-    <div className="allm-flex allm-flex-col allm-gap-y-2 allm-w-[75%]">
-      {settings.defaultMessages.map((content, i) => (
-        <button
-          key={i}
-          style={{
-            opacity: 0,
-            wordBreak: "break-word",
-            backgroundColor: embedderSettings.USER_STYLES.msgBg,
-            fontSize: settings.textSize,
-          }}
-          type="button"
-          onClick={() => {
-            window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: content } }));
-          }}
-          className={`msg-suggestion allm-border-none hover:allm-shadow-[0_4px_14px_rgba(0,0,0,0.5)] allm-cursor-pointer allm-px-2 allm-py-2 allm-rounded-lg allm-text-white allm-w-full allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
-        >
-          {content}
-        </button>
-      ))}
     </div>
   );
 }
