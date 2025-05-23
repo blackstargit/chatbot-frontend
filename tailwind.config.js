@@ -89,7 +89,9 @@ export default {
         ]
       },
       fontSize:{
+        'xs': '13px',
         'sm': '14px',
+        'md': '16px',
         'xl': '20px',
         '3xl': '28px',
       },

@@ -1,39 +1,33 @@
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
-import ChatService from "@/models/chatService";
-import {
-  ArrowCounterClockwise,
-  Check,
-  Copy,
-  DotsThreeOutlineVertical,
-  Envelope,
-  X,
-} from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+// src/components/ChatWindow/ChatPage/ChatPageHeader.jsx
 
-export default function ChatWindowHeader({
+import React, { useEffect, useRef, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+import { CaretLeft, DotsThreeOutline, DotsThreeOutlineVertical, X } from "@phosphor-icons/react";
+import OptionsMenu from "./OptionsMenu";
+import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
+
+export default function ChatPageHeader({
   sessionId,
   settings = {},
   iconUrl = null,
-  closeChat,
-  setChatHistory,
+  closeChat, // This prop is for closing the entire chatbot window
+  onStartNewChat, // New prop: function to start a new chat session
 }) {
   const [showingOptions, setShowOptions] = useState(false);
   const menuRef = useRef();
   const buttonRef = useRef();
+  // const navigate = useNavigate(); // Initialize useNavigate hook
 
-  const handleChatReset = async () => {
-    await ChatService.resetEmbedChatSession(settings, sessionId);
-    setChatHistory([]);
-    setShowOptions(false);
+  // Function to handle starting a new chat
+  const handleNewChat = () => {
+    onStartNewChat(); // Call the prop function to generate new session and navigate
+    setShowOptions(false); // Close options menu after action
   };
+
+  // Effect to handle clicks outside the options menu
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target) && buttonRef.current && !buttonRef.current.contains(event.target)) {
         setShowOptions(false);
       }
     }
@@ -41,115 +35,67 @@ export default function ChatWindowHeader({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, buttonRef]); // Added buttonRef to dependencies
+
+  const handleBackToHome = () => {
+    // navigate("/"); // Navigate back to the Home page route
+    console.log("Navigate to home");
+  };
 
   return (
     <div
       style={{ borderBottom: "1px solid #E9E9E9" }}
-      className="allm-flex allm-items-center allm-relative allm-rounded-t-2xl"
-      id="anything-llm-header"
+      className="allm-flex allm-items-center allm-justify-between allm-flex-row allm-w-full allm-h-15 allm-gap-2.5"
+      id="chat-page-header"
     >
-      <div className="allm-flex allm-justify-center allm-items-center allm-w-full allm-h-[76px]">
-        <img
-          style={{ maxWidth: 48, maxHeight: 48 }}
-          src={iconUrl ?? AnythingLLMIcon}
-          alt={iconUrl ? "Brand" : "AnythingLLM Logo"}
-        />
-      </div>
-      <div className="allm-absolute allm-right-0 allm-flex allm-gap-x-1 allm-items-center allm-px-[22px]">
-        {settings.loaded && (
+      <div className="allm-flex allm-items-center allm-justify-between allm-flex-row allm-w-full allm-px-6 allm-py-[10px] allm-mt-[1px]">
+        {/* height must be 42px */}
+        {/* Left Section: Back button, Icon, Title & Subtitle */}
+        <div className="allm-flex allm-items-center allm-justify-start allm-flex-row allm-gap-1.5">
+          {/* Back Button */}
           <button
-            ref={buttonRef}
             type="button"
-            onClick={() => setShowOptions(!showingOptions)}
-            className="allm-bg-transparent hover:allm-cursor-pointer allm-border-none hover:allm-bg-gray-100 allm-rounded-sm allm-text-slate-800/60"
-            aria-label="Options"
+            onClick={handleBackToHome}
+            className="allm-flex allm-items-center allm-justify-center allm-bg-transparent hover:allm-cursor-pointer allm-border-none hover:allm-bg-gray-100/50 allm-text-slate-600 focus:allm-outline-none focus:allm-ring-1 focus:allm-ring-inset focus:allm-ring-gray-300"
+            aria-label="Back to Home"
           >
-            <DotsThreeOutlineVertical size={20} weight="fill" />
+            <CaretLeft size={24} />
           </button>
-        )}
-        <button
-          type="button"
-          onClick={closeChat}
-          className="allm-bg-transparent hover:allm-cursor-pointer allm-border-none hover:allm-bg-gray-100 allm-rounded-sm allm-text-slate-800/60"
-          aria-label="Close"
-        >
-          <X size={20} weight="bold" />
-        </button>
+
+          <div className="allm-flex allm-items-center allm-justify-start allm-gap-4">
+            {/* Icon */}
+            <img
+              style={{ width: 32, height: 32 }} // Consistent with image
+              src={iconUrl ?? AnythingLLMIcon}
+              alt={iconUrl ? "Brand" : "Answer Hub Logo"} // More specific alt text
+              className="" // Or allm-rounded-full if the icon in image is circular
+            />
+
+            {/* Title and Subtitle */}
+            <div className="allm-flex allm-flex-col allm-align-center allm-justify-start">
+              <h1 className="allm-text-md allm-p-0 allm-m-0">Answer Hub</h1>
+              <p className="allm-text-xs allm-p-0 allm-m-0">Your AI-powered assistant.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section: Options Button */}
+        <div className="allm-flex allm-items-center allm-justify-center allm-gap-[5px]">
+          {settings.loaded && (
+            <button
+              ref={buttonRef}
+              type="button"
+              onClick={() => setShowOptions(!showingOptions)}
+              className="allm-px-2.5 allm-bg-transparent hover:allm-cursor-pointer allm-border-none hover:allm-bg-gray-100/50 allm-rounded-full allm-text-slate-600 focus:allm-outline-none focus:allm-ring-1 focus:allm-ring-inset focus:allm-ring-gray-300"
+              aria-label="Options menu"
+            >
+              <DotsThreeOutline size={24} />
+            </button>
+          )}
+        </div>
+        {/* Options Menu (positioned based on its own logic, usually absolutely or fixed) */}
+        <OptionsMenu settings={settings} showing={showingOptions} startNewChat={handleNewChat} sessionId={sessionId} menuRef={menuRef} />
       </div>
-      <OptionsMenu
-        settings={settings}
-        showing={showingOptions}
-        resetChat={handleChatReset}
-        sessionId={sessionId}
-        menuRef={menuRef}
-      />
     </div>
-  );
-}
-
-function OptionsMenu({ settings, showing, resetChat, sessionId, menuRef }) {
-  if (!showing) return null;
-  return (
-    <div
-      ref={menuRef}
-      className="allm-bg-white allm-absolute allm-z-10 allm-flex allm-flex-col allm-gap-y-1 allm-rounded-xl allm-shadow-lg allm-top-[64px] allm-right-[46px]"
-    >
-      <button
-        onClick={resetChat}
-        className="hover:allm-cursor-pointer allm-bg-white allm-gap-x-[12px] hover:allm-bg-gray-100 allm-rounded-lg allm-border-none allm-flex allm-items-center allm-text-base allm-text-[#7A7D7E] allm-font-bold allm-px-4"
-      >
-        <ArrowCounterClockwise size={24} />
-        <p className="allm-text-[14px]">Reset Chat</p>
-      </button>
-      <ContactSupport email={settings.supportEmail} />
-      <SessionID sessionId={sessionId} />
-    </div>
-  );
-}
-
-function SessionID({ sessionId }) {
-  if (!sessionId) return null;
-
-  const [sessionIdCopied, setSessionIdCopied] = useState(false);
-
-  const copySessionId = () => {
-    navigator.clipboard.writeText(sessionId);
-    setSessionIdCopied(true);
-    setTimeout(() => setSessionIdCopied(false), 1000);
-  };
-
-  if (sessionIdCopied) {
-    return (
-      <div className="hover:allm-cursor-pointer allm-bg-white allm-gap-x-[12px] hover:allm-bg-gray-100 allm-rounded-lg allm-border-none allm-flex allm-items-center allm-text-base allm-text-[#7A7D7E] allm-font-bold allm-px-4">
-        <Check size={24} />
-        <p className="allm-text-[14px] allm-font-sans">Copied!</p>
-      </div>
-    );
-  }
-
-  return (
-    <button
-      onClick={copySessionId}
-      className="hover:allm-cursor-pointer allm-bg-white allm-gap-x-[12px] hover:allm-bg-gray-100 allm-rounded-lg allm-border-none allm-flex allm-items-center allm-text-base allm-text-[#7A7D7E] allm-font-bold allm-px-4"
-    >
-      <Copy size={24} />
-      <p className="allm-text-[14px]">Session ID</p>
-    </button>
-  );
-}
-
-function ContactSupport({ email = null }) {
-  if (!email) return null;
-
-  const subject = `Inquiry from ${window.location.origin}`;
-  return (
-    <a
-      href={`mailto:${email}?Subject=${encodeURIComponent(subject)}`}
-      className="allm-no-underline hover:allm-underline hover:allm-cursor-pointer allm-bg-white allm-gap-x-[12px] hover:allm-bg-gray-100 allm-rounded-lg allm-border-none allm-flex allm-items-center allm-text-base allm-text-[#7A7D7E] allm-font-bold allm-px-4"
-    >
-      <Envelope size={24} />
-      <p className="allm-text-[14px] allm-font-sans">Email Support</p>
-    </a>
   );
 }

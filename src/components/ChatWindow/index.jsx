@@ -1,4 +1,4 @@
-import ChatWindowHeader from "./ChatPage/Header";
+import React from "react";
 import SessionId from "../SessionId";
 import useChatHistory from "@/hooks/chat/useChatHistory";
 import ChatContainer from "./ChatPage/ChatContainer";
@@ -6,6 +6,7 @@ import Sponsor from "../Sponsor";
 import { ChatHistoryLoading } from "./ChatPage/ChatContainer/ChatHistory";
 // import ResetChat from "../ResetChat";
 import NavigationBar from "./Shared/Footer";
+import ChatPageHeader from "./ChatPage/Header";
 
 // implement another hook for active screen in local storage and use it here
 // this is the main for this codebase
@@ -15,23 +16,18 @@ export default function ChatWindow({ closeChat, settings, sessionId }) {
   // fetch all chats history if last active page is messages
   // fetch recent chat name if last active page is home
   // fetch recent chats history if last active page is chat
-  const { chatHistory, setChatHistory, loading } = useChatHistory(
-    settings,
-    sessionId
-  );
+  const { chatHistory, setChatHistory, loading } = useChatHistory(settings, sessionId);
+
+  const handleNewChat = () => {
+    console.log("New chat");
+  };
 
   // see if loading is needed for home page since only recent messages needs to be fetched.
   if (loading) {
     return (
       <div className="allm-flex allm-flex-col allm-h-full">
         {/* Header component place*/}
-        <ChatWindowHeader
-          sessionId={sessionId}
-          settings={settings}
-          iconUrl={settings.brandImageUrl}
-          closeChat={closeChat}
-          setChatHistory={setChatHistory}
-        />
+        <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} />
         <ChatHistoryLoading />
         <div className="allm-pt-4 allm-pb-2 allm-h-fit allm-gap-y-1">
           <SessionId />
@@ -47,9 +43,9 @@ export default function ChatWindow({ closeChat, settings, sessionId }) {
   return (
     <div className="allm-flex allm-flex-col allm-h-full allm-font-sans allm-text-sm">
       {/* Header component place*/}
-      {!settings.noHeader && (
-        <ChatWindowHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} setChatHistory={setChatHistory} />
-      )}
+      {/* {!settings.noHeader && ( */}
+      <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} />
+      {/* )} */}
       <div className="allm-flex-grow allm-overflow-y-auto">
         <ChatContainer sessionId={sessionId} settings={settings} knownHistory={chatHistory} />
       </div>
@@ -76,9 +72,6 @@ export default function ChatWindow({ closeChat, settings, sessionId }) {
   );
 }
 
-
-
-
 // Enables us to safely markdown and sanitize all responses without risk of injection
 // but still be able to attach a handler to copy code snippets on all elements
 // that are code snippets.
@@ -86,10 +79,7 @@ function copyCodeSnippet(uuid) {
   const target = document.querySelector(`[data-code="${uuid}"]`);
   if (!target) return false;
 
-  const markdown =
-    target.parentElement?.parentElement?.querySelector(
-      "pre:first-of-type"
-    )?.innerText;
+  const markdown = target.parentElement?.parentElement?.querySelector("pre:first-of-type")?.innerText;
   if (!markdown) return false;
 
   window.navigator.clipboard.writeText(markdown);

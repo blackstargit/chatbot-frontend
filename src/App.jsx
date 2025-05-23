@@ -33,7 +33,6 @@ export default function App() {
   const windowWidth = embedSettings.windowWidth ?? "400px";
   const windowHeight = embedSettings.windowHeight ?? "700px";
 
-  console.log("EMbedL", embedSettings);
   return (
     <I18nextProvider i18n={i18next}>
       <Head />
