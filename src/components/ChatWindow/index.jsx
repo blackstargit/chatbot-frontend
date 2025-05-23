@@ -1,14 +1,15 @@
+import React, { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+import useSessionId from "@/hooks/useSessionId";
+
+import HomePage from "@/components/ChatWindow/HomePage";
+import ChatPage from "@/components/ChatWindow/ChatPage";
+import MessagesPage from "@/components/ChatWindow/MessagesPage";
+
 // implement another hook for active screen in local storage and use it here
 // this is the main for this codebase
 // implement routing here
-
-import React, { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
-import HomePage from "./HomePage";
-import ChatPage from "./ChatPage";
-import useSessionId from "@/hooks/useSessionId";
-import MessagesPage from "./MessagesPage";
-
 function ChatWindow({ closeChat, settings }) {
   const navigate = useNavigate();
   const [activeScreen, setActiveScreen] = useState("");

@@ -1,10 +1,11 @@
 // src/components/ChatWindow/ChatPage/ChatPageHeader.jsx
 
 import React, { useEffect, useRef, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import { CaretLeft, DotsThreeOutline, DotsThreeOutlineVertical, X } from "@phosphor-icons/react";
-import OptionsMenu from "./OptionsMenu";
+import { CaretLeft, DotsThreeOutline } from "@phosphor-icons/react";
+
 import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
+
+import OptionsMenu from "@/components/ChatWindow/ChatPage/Header/OptionsMenu";
 
 export default function ChatPageHeader({
   sessionId,

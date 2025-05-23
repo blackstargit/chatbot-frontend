@@ -1,19 +1,20 @@
 import React from "react";
-import SessionId from "../../SessionId";
-import useChatHistory from "@/hooks/chat/useChatHistory";
-import ChatContainer from "./ChatContainer";
-import Sponsor from "../../Sponsor";
-import { ChatHistoryLoading } from "./ChatContainer/ChatHistory";
-import NavigationBar from "../Shared/Footer";
-import ChatPageHeader from "./Header";
 import { useParams } from "react-router-dom";
-// import ResetChat from "../ResetChat";
+
+import useChatHistory from "@/hooks/chat/useChatHistory";
+
+import SessionId from "@/components/ChatWindow/ChatPage/ChatContainer/SessionId";
+import NavigationBar from "@/components/Shared/NavigationBar";
+import Sponsor from "@/components/Shared/Sponsor";
+
+import ChatContainer from "@/components/ChatWindow/ChatPage/ChatContainer";
+import { ChatHistoryLoading } from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory";
+import ChatPageHeader from "@/components/ChatWindow/ChatPage/Header";
 
 // implement another hook for active screen in local storage and use it here
 // this is the main for this codebase
 // implement routing here
-
-export default function ChatWindow({ closeChat, settings }) {
+export default function ChatPage({ closeChat, settings }) {
   // fetch all chats history if last active page is messages
   // fetch recent chat name if last active page is home
   // fetch recent chats history if last active page is chat
@@ -60,9 +61,7 @@ export default function ChatWindow({ closeChat, settings }) {
             }
           }}
         />
-        <div className="allm-py-2.5">
-          <Sponsor settings={settings} />
-        </div>
+        <Sponsor settings={settings} />
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ChatHistory from "./ChatHistory";
-import PromptInput from "./PromptInput";
+
 import handleChat from "@/utils/chat";
 import ChatService from "@/models/chatService";
+
+import ChatHistory from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory";
+import PromptInput from "@/components/ChatWindow/ChatPage/ChatContainer/PromptInput";
+
 export const SEND_TEXT_EVENT = "anythingllm-embed-send-prompt";
 
 export default function ChatContainer({

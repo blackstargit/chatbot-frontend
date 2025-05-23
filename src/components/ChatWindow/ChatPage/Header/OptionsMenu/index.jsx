@@ -1,9 +1,8 @@
-// src/components/ChatWindow/Shared/OptionsMenu.jsx
+import React from "react";
+import { ArrowCounterClockwise } from "@phosphor-icons/react";
 
-import React from "react"; // Make sure React is imported here
-import { ArrowCounterClockwise } from "@phosphor-icons/react"; // Only need ArrowCounterClockwise here
-import SessionID from "./SessionID";
-import ContactSupport from "./ContactSupport";
+import SessionID from "@/components/ChatWindow/ChatPage/Header/OptionsMenu/SessionId";
+import ContactSupport from "@/components/ChatWindow/ChatPage/Header/OptionsMenu/ContactSupport";
 
 export default function OptionsMenu({ settings, showing, startNewChat, sessionId, menuRef }) {
   if (!showing) return null;

@@ -1,7 +1,8 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { defaultNS, resources } from "./locales/resources.js";
+
+import { defaultNS, resources } from "@/locales/resources.js";
 
 export function initI18n(settings) {
   const language = settings?.language || "en";

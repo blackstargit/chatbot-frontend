@@ -1,14 +1,16 @@
-import useGetScriptAttributes from "@/hooks/useScriptAttributes";
-// import useSessionId from "@/hooks/useSessionId";
-import useOpenChat from "@/hooks/useOpen";
-import Head from "@/components/Head";
-import OpenButton from "@/components/OpenButton";
-import ChatWindow from "./components/ChatWindow";
 import { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
-import i18next from "@/i18n";
 import { HashRouter as Router } from "react-router-dom";
 
+import useGetScriptAttributes from "@/hooks/useScriptAttributes";
+import useOpenChat from "@/hooks/useOpen";
+// import useSessionId from "@/hooks/useSessionId";
+
+import i18next from "@/i18n.js";
+
+import Head from "@/components/Head";
+import OpenButton from "@/components/Shared/OpenButton";
+import ChatWindow from "@/components/ChatWindow";
 
 export default function App() {
   const { isChatOpen, toggleOpenChat } = useOpenChat();

@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-import { parseStylesSrc } from "./utils/constants.js";
-import { initI18n } from "./i18n.js";
+
+import "@/index.css";
+
+import App from "@/App";
+import { parseStylesSrc } from "@/utils/constants.js";
+import { initI18n } from "@/i18n.js";
 
 const appElement = document.createElement("div");
 document.body.appendChild(appElement);

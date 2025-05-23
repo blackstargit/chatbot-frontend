@@ -1,10 +1,12 @@
-import HistoricalMessage from "./HistoricalMessage";
-import PromptReply from "./PromptReply";
+import debounce from "lodash.debounce";
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, CircleNotch } from "@phosphor-icons/react";
+
 import { embedderSettings } from "@/main";
-import debounce from "lodash.debounce";
-import { SEND_TEXT_EVENT } from "..";
+
+import HistoricalMessage from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory/HistoricalMessage";
+import PromptReply from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHistory/PromptReply";
+import { SEND_TEXT_EVENT } from "@/components/ChatWindow/ChatPage/ChatContainer";
 
 export default function ChatHistory({ settings = {}, history = [] }) {
   const replyRef = useRef(null);
@@ -17,10 +19,7 @@ export default function ChatHistory({ settings = {}, history = [] }) {
 
   const handleScroll = () => {
     if (!chatHistoryRef.current) return;
-    const diff =
-      chatHistoryRef.current.scrollHeight -
-      chatHistoryRef.current.scrollTop -
-      chatHistoryRef.current.clientHeight;
+    const diff = chatHistoryRef.current.scrollHeight - chatHistoryRef.current.scrollTop - chatHistoryRef.current.clientHeight;
     // Fuzzy margin for what qualifies as "bottom". Stronger than straight comparison since that may change over time.
     const isBottom = diff <= 40;
     setIsAtBottom(isBottom);
@@ -51,9 +50,7 @@ export default function ChatHistory({ settings = {}, history = [] }) {
     return (
       <div className="allm-h-full allm-overflow-y-auto allm-px-2 allm-py-4 allm-flex allm-flex-col allm-justify-start allm-no-scroll">
         <div className="allm-flex allm-h-full allm-flex-col allm-items-center allm-justify-center">
-          <p className="allm-text-slate-400 allm-text-sm allm-font-sans allm-py-4 allm-text-center">
-            {settings?.greeting ?? "Send a chat to get started."}
-          </p>
+          <p className="allm-text-slate-400 allm-text-sm allm-font-sans allm-py-4 allm-text-center">{settings?.greeting ?? "Send a chat to get started."}</p>
           <SuggestedMessages settings={settings} />
         </div>
       </div>
@@ -70,8 +67,7 @@ export default function ChatHistory({ settings = {}, history = [] }) {
       <div className="allm-flex allm-flex-col allm-gap-y-4">
         {history.map((props, index) => {
           const isLastMessage = index === history.length - 1;
-          const isLastBotReply =
-            index === history.length - 1 && props.role === "assistant";
+          const isLastBotReply = index === history.length - 1 && props.role === "assistant";
 
           if (isLastBotReply && props.animate) {
             return (
@@ -128,10 +124,7 @@ export function ChatHistoryLoading() {
     <div className="allm-h-full allm-w-full allm-relative">
       <div className="allm-h-full allm-max-h-[82vh] allm-pb-[100px] allm-pt-[5px] allm-bg-gray-100 allm-rounded-lg allm-px-2 allm-h-full allm-mt-2 allm-gap-y-2 allm-overflow-y-scroll allm-flex allm-flex-col allm-justify-start allm-no-scroll">
         <div className="allm-flex allm-h-full allm-flex-col allm-items-center allm-justify-center">
-          <CircleNotch
-            size={14}
-            className="allm-text-slate-400 allm-animate-spin"
-          />
+          <CircleNotch size={14} className="allm-text-slate-400 allm-animate-spin" />
         </div>
       </div>
     </div>
@@ -155,9 +148,7 @@ function SuggestedMessages({ settings }) {
           }}
           type="button"
           onClick={() => {
-            window.dispatchEvent(
-              new CustomEvent(SEND_TEXT_EVENT, { detail: { command: content } })
-            );
+            window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: content } }));
           }}
           className={`msg-suggestion allm-border-none hover:allm-shadow-[0_4px_14px_rgba(0,0,0,0.5)] allm-cursor-pointer allm-px-2 allm-py-2 allm-rounded-lg allm-text-white allm-w-full allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
         >
