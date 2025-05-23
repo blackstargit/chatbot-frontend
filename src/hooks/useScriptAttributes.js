@@ -54,7 +54,8 @@ export default function useGetScriptAttributes() {
       if (!document) return false;
       if (!embedderSettings.settings.baseApiUrl || !embedderSettings.settings.embedId)
         throw new Error("[AnythingLLM Embed Module::Abort] - Invalid script tag setup detected. Missing required parameters for boot!");
-
+      
+      // bizarre problem/errorL assistantName and assistantIcon are not being set from script attributes 
       const updatedSettings = { ...DEFAULT_SETTINGS, ...removePermanentKeys(parseAndValidateEmbedSettings(embedderSettings.settings)), loaded: true };
       setSettings(updatedSettings);
     }
