@@ -46,6 +46,7 @@ export default function ChatHistory({ settings = {}, history = [] }) {
     }
   };
 
+  // TODO: Convert to Home Page Here, change logic too
   if (history.length === 0) {
     return (
       <div className="allm-h-full allm-overflow-y-auto allm-px-2 allm-py-4 allm-flex allm-flex-col allm-justify-start allm-no-scroll">
@@ -60,6 +61,7 @@ export default function ChatHistory({ settings = {}, history = [] }) {
   }
 
   return (
+    // Here is chat page transcript
     <div
       className="allm-h-full allm-overflow-y-auto allm-px-2 allm-pt-4 allm-pb-8 allm-flex allm-flex-col allm-justify-start allm-no-scroll"
       id="chat-history"
@@ -136,6 +138,7 @@ export function ChatHistoryLoading() {
   );
 }
 
+// implementation: Starter Message
 function SuggestedMessages({ settings }) {
   if (!settings?.defaultMessages?.length) return null;
 

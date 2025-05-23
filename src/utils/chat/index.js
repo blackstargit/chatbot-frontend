@@ -19,7 +19,7 @@ export default function handleChat(
   // Preserve the sentAt from the last message in the chat history
   const lastMessage = _chatHistory[_chatHistory.length - 1];
   const sentAt = lastMessage?.sentAt;
-
+// why is there setChatHistory and _chatHistory
   if (type === "abort") {
     setLoadingResponse(false);
     setChatHistory([

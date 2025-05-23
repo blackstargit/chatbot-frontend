@@ -38,7 +38,15 @@ export default {
         "dark-highlight": "#1C1E21",
         "dark-text": "#222628",
         description: "#D2D5DB",
-        "x-button": "#9CA3AF"
+        "x-button": "#9CA3AF",
+
+        'black-text': '#1C1C1C',
+        'white-text': '#FAFAFA',
+        'subtitle': '#737373',
+
+        // Background Colors
+        'user-message-bg': '#020918',
+        'system-message-bg': '#f2f2f2',
       },
       backgroundImage: {
         "preference-gradient":
@@ -63,22 +71,27 @@ export default {
       },
       fontFamily: {
         sans: [
+          "roboto",
           "plus-jakarta-sans",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
-          '"Helvetica Neue"',
+          'Segoe UI',
+          'Helvetica Neue',
           "Arial",
-          '"Noto Sans"',
+          'Noto Sans',
           "sans-serif",
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Noto Color Emoji"'
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji'
         ]
+      },
+      fontSize:{
+        'sm': '14px',
+        'xl': '20px',
+        '3xl': '28px',
       },
       animation: {
         sweep: "sweep 0.5s ease-in-out"

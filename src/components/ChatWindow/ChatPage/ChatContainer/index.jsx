@@ -134,6 +134,7 @@ export default function ChatContainer({
       <div className="allm-flex-1 allm-min-h-0 allm-mb-8">
         <ChatHistory settings={settings} history={chatHistory} />
       </div>
+      {/* Footer location place*/}
       <div className="allm-flex-shrink-0 allm-mt-auto">
         <PromptInput
           settings={settings}

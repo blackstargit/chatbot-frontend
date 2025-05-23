@@ -7,6 +7,7 @@ import ChatWindow from "./components/ChatWindow";
 import { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18next from "@/i18n";
+import NavigationBar from "./components/ChatWindow/Shared/Footer";
 
 export default function App() {
   const { isChatOpen, toggleOpenChat } = useOpenChat();
@@ -49,6 +50,7 @@ export default function App() {
           id="anything-llm-chat"
         >
           {isChatOpen && (
+            // session id already implemented. just need to add a table in db for all session ids of a user, a new session id is generated at reset chat which will be reprposed for new chat
             <ChatWindow
               closeChat={() => toggleOpenChat(false)}
               settings={embedSettings}

@@ -1,20 +1,30 @@
-import ChatWindowHeader from "./Header";
+import ChatWindowHeader from "./ChatPage/Header";
 import SessionId from "../SessionId";
 import useChatHistory from "@/hooks/chat/useChatHistory";
-import ChatContainer from "./ChatContainer";
+import ChatContainer from "./ChatPage/ChatContainer";
 import Sponsor from "../Sponsor";
-import { ChatHistoryLoading } from "./ChatContainer/ChatHistory";
-import ResetChat from "../ResetChat";
+import { ChatHistoryLoading } from "./ChatPage/ChatContainer/ChatHistory";
+// import ResetChat from "../ResetChat";
+import NavigationBar from "./Shared/Footer";
+
+// implement another hook for active screen in local storage and use it here
+// this is the main for this codebase
+// implement routing here
 
 export default function ChatWindow({ closeChat, settings, sessionId }) {
+  // fetch all chats history if last active page is messages
+  // fetch recent chat name if last active page is home
+  // fetch recent chats history if last active page is chat
   const { chatHistory, setChatHistory, loading } = useChatHistory(
     settings,
     sessionId
   );
 
+  // see if loading is needed for home page since only recent messages needs to be fetched.
   if (loading) {
     return (
       <div className="allm-flex allm-flex-col allm-h-full">
+        {/* Header component place*/}
         <ChatWindowHeader
           sessionId={sessionId}
           settings={settings}
@@ -31,38 +41,43 @@ export default function ChatWindow({ closeChat, settings, sessionId }) {
     );
   }
 
+  // no code snippets so this is unnecessary.
   setEventDelegatorForCodeSnippets();
 
   return (
-    <div className="allm-flex allm-flex-col allm-h-full">
+    <div className="allm-flex allm-flex-col allm-h-full allm-font-sans allm-text-sm">
+      {/* Header component place*/}
       {!settings.noHeader && (
-        <ChatWindowHeader
-          sessionId={sessionId}
-          settings={settings}
-          iconUrl={settings.brandImageUrl}
-          closeChat={closeChat}
-          setChatHistory={setChatHistory}
-        />
+        <ChatWindowHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} setChatHistory={setChatHistory} />
       )}
       <div className="allm-flex-grow allm-overflow-y-auto">
-        <ChatContainer
-          sessionId={sessionId}
-          settings={settings}
-          knownHistory={chatHistory}
-        />
+        <ChatContainer sessionId={sessionId} settings={settings} knownHistory={chatHistory} />
       </div>
-      <div className="allm-mt-4 allm-pb-4 allm-h-fit allm-gap-y-2 allm-z-10">
-        <Sponsor settings={settings} />
-        <ResetChat
+      <div className="allm-flex allm-flex-col allm-gap-2.5 allm-h-[98px] allm-w-full allm-pt-4">
+        <NavigationBar
+          activeScreen="messages"
+          onNavClick={(screen) => {
+            if (screen === "home") {
+              closeChat();
+            }
+          }}
+        />
+        <div className="allm-py-2.5">
+          <Sponsor settings={settings} />
+          {/* <ResetChat
           setChatHistory={setChatHistory}
           settings={settings}
           sessionId={sessionId}
           closeChat={closeChat}
-        />
+        /> */}
+        </div>
       </div>
     </div>
   );
 }
+
+
+
 
 // Enables us to safely markdown and sanitize all responses without risk of injection
 // but still be able to attach a handler to copy code snippets on all elements
