@@ -11,7 +11,6 @@ import RecentMessageCard from "@/components/Shared/RecentMessageCard";
 
 const HomePage = ({ onNavClick, onNavigate, activeScreen, settings, onStartNewChat }) => {
   const { t } = useTranslation();
-  console.log("IN HOME PAGE");
 
   // Default data if not provided by settings
   const defaultSettings = {
@@ -58,9 +57,9 @@ const HomePage = ({ onNavClick, onNavigate, activeScreen, settings, onStartNewCh
   };
 
   return (
-    <div className="allm-flex allm-flex-col allm-h-full allm-bg-gray-100">
+    <div className="allm-flex allm-flex-col allm-h-full allm-bg-white">
       {/* Welcome Section (Header-like part) */}
-      <WelcomeSection greeting={mergedSettings.welcomeGreeting} helpPrompt={mergedSettings.welcomeHelpPrompt} />
+      <WelcomeSection settings={mergedSettings} />
 
       {/* Main content area */}
       <div className="allm-flex-grow allm-overflow-y-auto allm-p-4 allm-space-y-4">

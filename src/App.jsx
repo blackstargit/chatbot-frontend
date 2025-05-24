@@ -39,7 +39,7 @@ export default function App() {
     <I18nextProvider i18n={i18next}>
       <Router>
         <Head />
-        <div id="anything-llm-embed-chat-container" className={`allm-fixed allm-inset-0 allm-z-50 ${isChatOpen ? "allm-block" : "allm-hidden"}`}>
+        <div id="anything-llm-embed-chat-container" className={`allm-fixed allm-inset-0 allm-z-50 allm-font-sans ${isChatOpen ? "allm-block" : "allm-hidden"}`}>
           <div
             style={{
               maxWidth: windowWidth,

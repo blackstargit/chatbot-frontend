@@ -1,6 +1,11 @@
 import { House, Chats } from "@phosphor-icons/react";
 import React from "react";
 
+import HomeIcon from "@/assets/home-1.svg";
+import MessagesIcon from "@/assets/messages-3.svg";
+import HomeIconOutline from "@/assets/home-1 (1).svg";
+import MessagesIconOutline from "@/assets/messages-3 (1).svg";
+
 const NavigationBar = ({ activeScreen, onNavClick }) => {
   return (
     <nav
@@ -20,7 +25,7 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
         `}
         aria-label="Go to Home page"
       >
-        {activeScreen === "" ? <House size={30} weight="fill" /> : <House size={30} />}
+        {activeScreen === "" ? <img src={HomeIcon} alt="Home" /> : <img src={HomeIconOutline} alt="Home" />}
         <span>Home</span>
       </button>
 
@@ -35,7 +40,7 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
         `}
         aria-label="Go to Messages"
       >
-        {activeScreen === "messages" ? <Chats size={30} weight="fill" /> : <Chats size={30} />}
+        {activeScreen === "messages" ?  <img src={MessagesIcon} alt="Messages" /> : <img src={MessagesIconOutline} alt="Messages" />}
         <span>Messages</span>
       </button>
     </nav>

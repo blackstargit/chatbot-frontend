@@ -1,4 +1,4 @@
-const WelcomeSection = ({ greeting, helpPrompt }) => {
+const WelcomeSection = ({ settings }) => {
   return (
     <div className="allm-px-4 allm-pt-8 allm-pb-6 allm-bg-gradient-to-br allm-from-gray-900 allm-to-gray-800 allm-rounded-b-2xl allm-shadow-lg">
       <div className="allm-flex allm-items-center allm-mb-4">
@@ -12,10 +12,10 @@ const WelcomeSection = ({ greeting, helpPrompt }) => {
             ></path>
           </svg>
         </div>
-        <h1 className="allm-text-white allm-text-2xl allm-font-bold">{greeting}</h1>
+        <h1 className="allm-text-white allm-text-2xl allm-font-bold">{settings.welcomeGreeting}</h1>
         <span className="allm-text-2xl allm-ml-2">👋</span> {/* Hand emoji */}
       </div>
-      <p className="allm-text-gray-300 allm-text-xl allm-font-semibold">{helpPrompt}</p>
+      <p className="allm-text-gray-300 allm-text-xl allm-font-semibold">{settings.welcomeHelpPrompt}</p>
     </div>
   );
 };
