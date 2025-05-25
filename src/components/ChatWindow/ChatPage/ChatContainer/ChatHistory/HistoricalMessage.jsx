@@ -24,7 +24,7 @@ const ThoughtBubble = ({ thought }) => {
       </div>
       {isExpanded && (
         <div className="allm-mt-2 allm-mb-3 allm-pl-0 allm-border-l-2 allm-border-gray-200">
-          <div className="allm-text-xs allm-text-gray-600 allm-font-mono allm-whitespace-pre-wrap">{thought.trim()}</div>
+          <div className="allm-text-xs allm-text-gray-600 allm-whitespace-pre-wrap">{thought.trim()}</div>
         </div>
       )}
     </div>
@@ -50,7 +50,7 @@ const HistoricalMessage = forwardRef(({ uuid = v4(), message, role, sources = []
             wordBreak: "break-word",
             backgroundColor: role === "user" ? embedderSettings.USER_STYLES.msgBg : embedderSettings.ASSISTANT_STYLES.msgBg,
           }}
-          className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col allm-font-sans ${
+          className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col ${
             error
               ? "allm-bg-red-200 allm-rounded-lg allm-mr-[37px] allm-ml-[9px]"
               : role === "user"
@@ -66,7 +66,7 @@ const HistoricalMessage = forwardRef(({ uuid = v4(), message, role, sources = []
                 className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
                 id="anything-llm-icon"
               />
-              <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+              <div className="allm-text-sm allm-text-black-text allm-font-bold allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
                 {embedderSettings.settings.assistantName || "Alphabot"}
               </div>
             </div>
@@ -77,7 +77,7 @@ const HistoricalMessage = forwardRef(({ uuid = v4(), message, role, sources = []
                 <span className="allm-inline-block">
                   <Warning className="allm-h-4 allm-w-4 allm-mb-1 allm-inline-block" /> Could not respond to message.
                 </span>
-                <p className="allm-text-xs allm-font-mono allm-mt-2 allm-border-l-2 allm-border-red-500 allm-pl-2 allm-bg-red-300 allm-p-2 allm-rounded-sm">
+                <p className="allm-text-xs allm-mt-2 allm-border-l-2 allm-border-red-500 allm-pl-2 allm-bg-red-300 allm-p-2 allm-rounded-sm">
                   {errorMsg || "Server error"}
                 </p>
               </div>

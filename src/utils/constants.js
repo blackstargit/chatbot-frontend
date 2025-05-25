@@ -1,4 +1,6 @@
 export const CHAT_UI_REOPEN = "___anythingllm-chat-widget-open___";
+export const ACTIVE_SCREEN = "___anythingllm-get-active-screen___";
+
 export function parseStylesSrc(scriptSrc = null) {
   try {
     const _url = new URL(scriptSrc);

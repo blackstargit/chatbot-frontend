@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import useSessionId from "@/hooks/useSessionId";
+import { SEND_TEXT_EVENT } from "@/components/ChatWindow/ChatPage/ChatContainer";
+import { ACTIVE_SCREEN } from "@/utils/constants";
 
 import HomePage from "@/components/ChatWindow/HomePage";
 import ChatPage from "@/components/ChatWindow/ChatPage";
@@ -12,40 +14,45 @@ import MessagesPage from "@/components/ChatWindow/MessagesPage";
 // implement routing here
 function ChatWindow({ closeChat, settings }) {
   const navigate = useNavigate();
-  const [activeScreen, setActiveScreen] = useState("");
+  const [activeScreen, setActiveScreen] = useState(window?.localStorage?.getItem(ACTIVE_SCREEN) || "");
+  const newSessionId = useSessionId({ createNewSessionId: true, activeScreen });
 
-  const handleNavigate = (location) => navigate(`/${location}`);
-  const handleNavClick = (screen) => {
-    setActiveScreen(screen);
-    handleNavigate(screen);
+  // todo: add save sessionId
+  console.log("New session ID:", newSessionId, activeScreen);
+
+  const handleNavigate = (location) => {
+    setActiveScreen(location);
+    window.localStorage.setItem(ACTIVE_SCREEN, location);
+
+    console.log("Location: ", location);
+    navigate(`/${location}`);
   };
 
   const handleStartNewChat = (initialQuestion = null) => {
-    const newSessionId = useSessionId({ createNewSessionId: true });
-    navigate(`/chat/${newSessionId}`);
+    if (initialQuestion) {
+      window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: initialQuestion } }));
+    } else {
+      window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: "" } }));
+    }
+    handleNavigate(`chat/${newSessionId}`);
     // TODO: Handle Recent Messages Here
     // In a real app, you might also store the initial question in state
     // so ChatPage can pick it up. For this example, ChatPage will just log it.
-    console.log("New chat started with ID:", newSessionId, "Initial question:", initialQuestion);
+    // console.log("New chat started with ID:", newSessionId, "Initial question:", initialQuestion);
   };
 
   return (
-    <div className="allm-flex allm-flex-col allm-h-full allm-font-sans allm-text-sm">
+    <div className="allm-flex allm-flex-col allm-h-full allm-font-['Roboto'] allm-text-sm allm-rounded-2xl">
       <Routes>
         <Route
           path="/"
-          element={
-            <HomePage
-              onStartNewChat={handleStartNewChat}
-              onNavClick={handleNavClick}
-              onNavigate={handleNavigate}
-              settings={settings}
-              activeScreen={activeScreen}
-            />
-          }
+          element={<HomePage onStartNewChat={handleStartNewChat} onNavigate={handleNavigate} settings={settings} activeScreen={activeScreen} />}
         />
         <Route path="/chat/:sessionId" element={<ChatPage closeChat={closeChat} settings={settings} onNavigate={handleNavigate} />} />
-        <Route path="/messages" element={<MessagesPage onStartNewChat={handleStartNewChat} settings={settings} onNavClick={handleNavClick} onNavigate={handleNavigate} activeScreen={activeScreen} />} />
+        <Route
+          path="/messages"
+          element={<MessagesPage onStartNewChat={handleStartNewChat} settings={settings} onNavigate={handleNavigate} activeScreen={activeScreen} />}
+        />
       </Routes>
     </div>
   );

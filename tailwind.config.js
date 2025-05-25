@@ -40,13 +40,20 @@ export default {
         description: "#D2D5DB",
         "x-button": "#9CA3AF",
 
+        // Text Colors
         'black-text': '#1C1C1C',
         'white-text': '#FAFAFA',
         'subtitle': '#737373',
+        'greeting': "#A4A7A9",
 
         // Background Colors
         'user-message-bg': '#020918',
         'system-message-bg': '#f2f2f2',
+
+        // gradient colors
+        'gradient-start': '#040414',
+        'gradient-middle': '#000000',
+        'gradient-end': '#FFFFFF',
       },
       backgroundImage: {
         "preference-gradient":

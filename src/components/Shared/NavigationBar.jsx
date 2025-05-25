@@ -6,17 +6,16 @@ import MessagesIcon from "@/assets/messages-3.svg";
 import HomeIconOutline from "@/assets/home-1 (1).svg";
 import MessagesIconOutline from "@/assets/messages-3 (1).svg";
 
-const NavigationBar = ({ activeScreen, onNavClick }) => {
+const NavigationBar = ({ activeScreen, onNavigate }) => {
+  console.log("Active screen messages", activeScreen === "messages");
+  console.log("Active screen home", activeScreen === "");
+
+
   return (
-    <nav
-      className="
-      allm-flex allm-justify-around allm-items-center
-      allm-w-full allm-h-13
-    "
-    >
+    <nav className="allm-flex allm-justify-around allm-items-center allm-w-full allm-h-13">
       {/* Home Button */}
       <button
-        onClick={() => onNavClick("")}
+        onClick={() => onNavigate("")}
         className={`
           allm-flex allm-flex-col allm-items-center allm-gap-[5px]
           allm-text-sm allm-font-medium
@@ -31,7 +30,7 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
 
       {/* Messages Button */}
       <button
-        onClick={() => onNavClick("messages")}
+        onClick={() => onNavigate("messages")}
         className={`
           allm-flex allm-flex-col allm-items-center allm-gap-[5px]
           allm-text-sm allm-font-medium
@@ -40,7 +39,7 @@ const NavigationBar = ({ activeScreen, onNavClick }) => {
         `}
         aria-label="Go to Messages"
       >
-        {activeScreen === "messages" ?  <img src={MessagesIcon} alt="Messages" /> : <img src={MessagesIconOutline} alt="Messages" />}
+        {activeScreen === "messages" ? <img src={MessagesIcon} alt="Messages" /> : <img src={MessagesIconOutline} alt="Messages" />}
         <span>Messages</span>
       </button>
     </nav>

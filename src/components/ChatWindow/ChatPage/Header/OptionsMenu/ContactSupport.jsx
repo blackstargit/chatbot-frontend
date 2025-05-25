@@ -12,7 +12,7 @@ export default function ContactSupport({ email = null }) {
       aria-label="Email Support"
     >
       <Envelope size={24} />
-      <p className="allm-text-[14px] allm-font-sans">Email Support</p>
+      <p className="allm-text-[14px]">Email Support</p>
     </a>
   );
 }

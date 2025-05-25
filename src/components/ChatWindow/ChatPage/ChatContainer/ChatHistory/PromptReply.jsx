@@ -40,7 +40,7 @@ const ThoughtBubble = ({ thought }) => {
       </div>
       {isExpanded && (
         <div className="allm-mt-2 allm-mb-3 allm-pl-0 allm-border-l-2 allm-border-gray-200">
-          <div className="allm-text-xs allm-text-gray-600 allm-font-mono allm-whitespace-pre-wrap">
+          <div className="allm-text-xs allm-text-gray-600 allm-whitespace-pre-wrap">
             {cleanThought}
           </div>
         </div>
@@ -100,7 +100,7 @@ const PromptReply = forwardRef(
                   className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
                   id="anything-llm-icon"
                 />
-                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
                   {embedderSettings.settings.assistantName || "Alphabot"}
                 </div>
               </div>
@@ -124,7 +124,7 @@ const PromptReply = forwardRef(
                   className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
                   id="anything-llm-icon"
                 />
-                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+                <div className="allm-text-sm allm-text-black-text allm-font-bold allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
                   {embedderSettings.settings.assistantName || "Alphabot"}
                 </div>
               </div>
@@ -157,14 +157,14 @@ const PromptReply = forwardRef(
                 className="allm-w-5 allm-h-5 allm-flex-shrink-0 allm-m-0 allm-p-0"
                 id="anything-llm-icon"
               />
-              <div className="allm-text-sm allm-text-black-text allm-font-bold allm-font-sans allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
+              <div className="allm-text-sm allm-text-black-text allm-font-bold allm-m-0 allm-p-0 allm-pb-[1px] allm-flex allm-align-center">
                 {embedderSettings.settings.assistantName || "Alphabot"}
               </div>
             </div>
             {thoughts.length > 0 && <ThoughtBubble thought={thoughts.join("\n\n")} />}
             <div className="allm-flex allm-gap-x-5">
               <span
-                className="allm-font-sans allm-reply allm-whitespace-pre-line allm-font-normal allm-text-sm allm-md:text-sm allm-flex allm-flex-col allm-gap-y-1"
+                className="allm-reply allm-whitespace-pre-line allm-font-normal allm-text-sm allm-md:text-sm allm-flex allm-flex-col allm-gap-y-1"
                 dangerouslySetInnerHTML={{
                   __html: renderMarkdown(responseContent || ""),
                 }}

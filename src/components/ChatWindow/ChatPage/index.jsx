@@ -110,7 +110,7 @@ export default function ChatPage({ closeChat, settings, onNavigate }) {
   }
 
   return (
-    <div className="allm-flex allm-flex-col allm-h-full allm-font-sans allm-text-sm">
+    <div className="allm-flex allm-flex-col allm-h-full allm-text-sm">
       {!settings.noHeader && (
         <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} onNavigate={onNavigate} />
       )}

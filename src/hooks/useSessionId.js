@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { embedderSettings } from "../main";
 import { v4 } from "uuid";
 
-export default function useSessionId({ createNewSessionId }) {
+export default function useSessionId({ createNewSessionId = false }) {
   const [sessionId, setSessionId] = useState("");
 
   useEffect(() => {

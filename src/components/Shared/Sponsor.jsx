@@ -11,7 +11,7 @@ export default function Sponsor() {
           href={"#"}
           target="_blank"
           rel="noreferrer"
-          className="allm-text-[13px] allm-font-sans allm-no-underline allm-text-[#404040] hover:allm-opacity-100 hover:allm-underline"
+          className="allm-text-[13px] allm-no-underline allm-text-[#404040] hover:allm-opacity-100 hover:allm-underline"
         >
           Powered by Alphabase
         </a>
