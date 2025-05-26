@@ -7,10 +7,6 @@ import HomeIconOutline from "@/assets/home-1 (1).svg";
 import MessagesIconOutline from "@/assets/messages-3 (1).svg";
 
 const NavigationBar = ({ activeScreen, onNavigate }) => {
-  console.log("Active screen messages", activeScreen === "messages");
-  console.log("Active screen home", activeScreen === "");
-
-
   return (
     <nav className="allm-flex allm-justify-around allm-items-center allm-w-full allm-h-13">
       {/* Home Button */}

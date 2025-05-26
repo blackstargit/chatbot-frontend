@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 import useChatHistory from "@/hooks/chat/useChatHistory";
 
@@ -10,20 +10,43 @@ import ChatPageHeader from "@/components/ChatWindow/ChatPage/Header";
 import PromptInput from "@/components/ChatWindow/ChatPage/ChatContainer/PromptInput";
 import { SEND_TEXT_EVENT } from "@/components/ChatWindow/ChatPage/ChatContainer";
 
-export default function ChatPage({ closeChat, settings, onNavigate }) {
+export default function ChatPage({
+  closeChat,
+  settings,
+  clientUserId,
+  onStartNewChat,
+  onNavigate,
+}) {
   const { sessionId } = useParams();
+  const location = useLocation();
   const { chatHistory, setChatHistory, loading } = useChatHistory(settings, sessionId);
 
   const [message, setMessage] = useState("");
   const [loadingResponse, setLoadingResponse] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  
+  let isListenerAttached = false;
 
+  const params = new URLSearchParams(location.search);
+  const q = params.get("q");
+  
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("Inside handleSubmit");
     if (!message) return;
+    if (!window) return;
+    if (!settings?.embedId) return;
+
+    if (!isRegistered) {
+      const STORAGE_IDENTIFIER = `allm_${settings.embedId}_session_id`;
+      window.localStorage.setItem(STORAGE_IDENTIFIER, sessionId);
+      setIsRegistered(true);
+    }
 
     const newUserMessage = {
       content: message,
@@ -40,9 +63,11 @@ export default function ChatPage({ closeChat, settings, onNavigate }) {
       sentAt: Math.floor(Date.now() / 1000),
     };
 
+    console.log("Finished assistantPlaceholder");
     setChatHistory((prev) => [...prev, newUserMessage, assistantPlaceholder]);
     setMessage("");
     setLoadingResponse(true);
+    console.log("Finished setChatHistory");
   };
 
   const sendCommand = (command, history = [], attachments = []) => {
@@ -78,31 +103,46 @@ export default function ChatPage({ closeChat, settings, onNavigate }) {
         },
       ];
     }
-
+    console.log("Updated history: ", updatedHistory);
     setChatHistory(updatedHistory);
     setLoadingResponse(true);
   };
 
-  useEffect(() => {
-    const handleAutofillEvent = (event) => {
-      if (!event.detail.command) return;
-      sendCommand(event.detail.command, [], []);
-    };
+  const handleAutofillEvent = (event) => {
+    if (!event.detail.command) return;
+    sendCommand(event.detail.command, [], []);
+  };
 
-    window.addEventListener(SEND_TEXT_EVENT, handleAutofillEvent);
+  useEffect(() => {
+    if (!isListenerAttached) {
+      window.addEventListener(SEND_TEXT_EVENT, handleAutofillEvent);
+      isListenerAttached = true;
+      console.log("Listener manually flagged as attached");
+    }
+
     return () => {
       window.removeEventListener(SEND_TEXT_EVENT, handleAutofillEvent);
+      isListenerAttached = false;
     };
   }, [chatHistory]);
 
-  const handleNewChat = () => {
-    console.log("New chat");
-  };
+  // useEffect(() => {
+  //   if (q) {
+      // handleAutofillEvent({ detail: { command: q } });
+    // }
+  // }, [q]);
 
   if (loading) {
     return (
       <div className="allm-flex allm-flex-col allm-h-full">
-        <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} />
+        <ChatPageHeader
+          sessionId={sessionId}
+          settings={settings}
+          iconUrl={settings.brandImageUrl}
+          closeChat={closeChat}
+          onStartNewChat={onStartNewChat}
+          onNavigate={onNavigate}
+        />
         <ChatHistoryLoading />
         <Sponsor />
       </div>
@@ -112,12 +152,20 @@ export default function ChatPage({ closeChat, settings, onNavigate }) {
   return (
     <div className="allm-flex allm-flex-col allm-h-full allm-text-sm">
       {!settings.noHeader && (
-        <ChatPageHeader sessionId={sessionId} settings={settings} iconUrl={settings.brandImageUrl} closeChat={closeChat} onStartNewChat={handleNewChat} onNavigate={onNavigate} />
+        <ChatPageHeader
+          sessionId={sessionId}
+          settings={settings}
+          iconUrl={settings.brandImageUrl}
+          closeChat={closeChat}
+          onStartNewChat={onStartNewChat}
+          onNavigate={onNavigate}
+        />
       )}
       <div className="allm-flex-grow allm-overflow-y-auto">
         <ChatContainer
           sessionId={sessionId}
           settings={settings}
+          clientUserId={clientUserId}
           chatHistory={chatHistory}
           setChatHistory={setChatHistory}
           loadingResponse={loadingResponse}

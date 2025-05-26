@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { embedderSettings } from "../main";
 import { v4 } from "uuid";
 
-export default function useSessionId({ createNewSessionId = false }) {
+export default function useSessionId() {
   const [sessionId, setSessionId] = useState("");
 
   useEffect(() => {
-    function getOrAssignSessionId(createNewSessionId) {
+    function getOrAssignSessionId() {
       if (!window || !embedderSettings?.settings?.embedId) return;
 
       const STORAGE_IDENTIFIER = `allm_${embedderSettings?.settings?.embedId}_session_id`;
       const currentId = window.localStorage.getItem(STORAGE_IDENTIFIER);
-      if(!createNewSessionId && !!currentId) {
+      if(!!currentId) {
         console.log(`Resuming session id`, currentId);
         setSessionId(currentId);
         return;
@@ -22,8 +22,8 @@ export default function useSessionId({ createNewSessionId = false }) {
       window.localStorage.setItem(STORAGE_IDENTIFIER, newId);
       setSessionId(newId);
     }
-    getOrAssignSessionId(createNewSessionId);
-  }, [window]);
+    getOrAssignSessionId();
+  }, [window, embedderSettings?.settings?.embedId]);
 
   return sessionId;
 }

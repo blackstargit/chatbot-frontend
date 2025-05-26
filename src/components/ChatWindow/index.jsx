@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import useSessionId from "@/hooks/useSessionId";
-import { SEND_TEXT_EVENT } from "@/components/ChatWindow/ChatPage/ChatContainer";
 import { ACTIVE_SCREEN } from "@/utils/constants";
 
 import HomePage from "@/components/ChatWindow/HomePage";
 import ChatPage from "@/components/ChatWindow/ChatPage";
 import MessagesPage from "@/components/ChatWindow/MessagesPage";
+import { v4 as uuidv4 } from "uuid";
+import useClientUserId from "@/hooks/useClientUserId";
 
 // implement another hook for active screen in local storage and use it here
 // this is the main for this codebase
 // implement routing here
 function ChatWindow({ closeChat, settings }) {
   const navigate = useNavigate();
-  const [activeScreen, setActiveScreen] = useState(window?.localStorage?.getItem(ACTIVE_SCREEN) || "");
-  const newSessionId = useSessionId({ createNewSessionId: true, activeScreen });
-
-  // todo: add save sessionId
-  console.log("New session ID:", newSessionId, activeScreen);
+  const [activeScreen, setActiveScreen] = useState(
+    window?.localStorage?.getItem(ACTIVE_SCREEN) || ""
+  );
+  const sessionId = useSessionId();
+  const clientUserId = useClientUserId();
 
   const handleNavigate = (location) => {
     setActiveScreen(location);
@@ -28,17 +29,22 @@ function ChatWindow({ closeChat, settings }) {
     navigate(`/${location}`);
   };
 
-  const handleStartNewChat = (initialQuestion = null) => {
-    if (initialQuestion) {
-      window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: initialQuestion } }));
-    } else {
-      window.dispatchEvent(new CustomEvent(SEND_TEXT_EVENT, { detail: { command: "" } }));
-    }
-    handleNavigate(`chat/${newSessionId}`);
-    // TODO: Handle Recent Messages Here
-    // In a real app, you might also store the initial question in state
-    // so ChatPage can pick it up. For this example, ChatPage will just log it.
-    // console.log("New chat started with ID:", newSessionId, "Initial question:", initialQuestion);
+const handleStartNewChat = (initialQuestion = null) => {
+  const newSessionId = uuidv4();
+
+  const encoded = initialQuestion ? encodeURIComponent(initialQuestion) : "";
+  const chatUri = `chat/${newSessionId}${encoded ? `?q=${encoded}` : ""}`;
+
+  const screen = chatUri.split("?")[0];
+  setActiveScreen(screen);
+  window.localStorage.setItem(ACTIVE_SCREEN, screen);
+
+  navigate(`/${chatUri}`);
+};
+
+
+  const handleRecentMessageClick = () => {
+    handleNavigate(`chat/${sessionId}`);
   };
 
   return (
@@ -46,12 +52,41 @@ function ChatWindow({ closeChat, settings }) {
       <Routes>
         <Route
           path="/"
-          element={<HomePage onStartNewChat={handleStartNewChat} onNavigate={handleNavigate} settings={settings} activeScreen={activeScreen} />}
+          element={
+            <HomePage
+              settings={settings}
+              activeScreen={activeScreen}
+              clientUserId={clientUserId}
+              onRecentMessageClick={handleRecentMessageClick}
+              onStartNewChat={handleStartNewChat}
+              onNavigate={handleNavigate}
+            />
+          }
         />
-        <Route path="/chat/:sessionId" element={<ChatPage closeChat={closeChat} settings={settings} onNavigate={handleNavigate} />} />
+        <Route
+          path="/chat/:sessionId"
+          element={
+            <ChatPage
+              closeChat={closeChat}
+              settings={settings}
+              clientUserId={clientUserId}
+              onStartNewChat={handleStartNewChat}
+              onNavigate={handleNavigate}
+            />
+          }
+        />
         <Route
           path="/messages"
-          element={<MessagesPage onStartNewChat={handleStartNewChat} settings={settings} onNavigate={handleNavigate} activeScreen={activeScreen} />}
+          element={
+            <MessagesPage
+              settings={settings}
+              activeScreen={activeScreen}
+              clientUserId={clientUserId}
+              onNavigate={handleNavigate}
+              onStartNewChat={handleStartNewChat}
+              onRecentMessageClick={handleRecentMessageClick}
+            />
+          }
         />
       </Routes>
     </div>
@@ -67,7 +102,8 @@ function copyCodeSnippet(uuid) {
   const target = document.querySelector(`[data-code="${uuid}"]`);
   if (!target) return false;
 
-  const markdown = target.parentElement?.parentElement?.querySelector("pre:first-of-type")?.innerText;
+  const markdown =
+    target.parentElement?.parentElement?.querySelector("pre:first-of-type")?.innerText;
   if (!markdown) return false;
 
   window.navigator.clipboard.writeText(markdown);

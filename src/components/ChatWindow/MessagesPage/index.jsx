@@ -1,18 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 // Assuming NavigationBar and Sponsor are still imported if not replaced by Figma code in those sections
 import NavigationBar from "@/components/Shared/NavigationBar";
 import Sponsor from "@/components/Shared/Sponsor";
 
-const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) => {
+import ChatService from "@/models/chatService";
+
+const MessagesPage = ({
+  activeScreen,
+  settings,
+  clientUserId,
+  onNavigate,
+  onStartNewChat,
+}) => {
   const { t } = useTranslation();
+  const [chatSessions, setChatSessions] = useState([]);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
 
   const defaultSettings = {
     pageTitle: t("messages.title", { defaultValue: "Messages" }),
     askQuestionText: t("messages.ask_question", { defaultValue: "Ask a question" }),
     recentMessageData: {
-      message: t("messages.recent_message.default_content", { defaultValue: "AI tools by Alphabase" }),
+      message: t("messages.recent_message.default_content", {
+        defaultValue: "AI tools by Alphabase",
+      }),
       sender: t("messages.recent_message.default_sender", { defaultValue: "Fin" }),
       timeAgo: t("messages.recent_message.default_time_ago", { defaultValue: "1h ago" }),
       sessionId: "default-recent-chat-id",
@@ -33,16 +45,36 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
       ? {
           ...defaultSettings.recentMessageData,
           ...settings.recentMessageData,
-          brandImageUrl: settings?.recentMessageData?.brandImageUrl || defaultSettings.recentMessageData.brandImageUrl,
+          brandImageUrl:
+            settings?.recentMessageData?.brandImageUrl ||
+            defaultSettings.recentMessageData.brandImageUrl,
         }
       : defaultSettings.recentMessageData,
   };
 
-  const handleAskQuestionClick = () => {
-    onStartNewChat();
-  };
+  useEffect(() => {
+    console.log("Messages Page, useEffect", clientUserId, settings?.embedId, settings?.baseApiUrl);
+    if (clientUserId && settings?.embedId && settings?.baseApiUrl) {
+      setIsLoadingSessions(true);
+      ChatService.getUserChatSessions(
+        { baseApiUrl: settings.baseApiUrl, embedId: settings.embedId },
+        clientUserId,
+        20,
+        0
+      )
+        .then((data) => {
+          setChatSessions(data.chats || []);
+          console.log("Chat Sessions", data.chats);
+        })
+        .catch((error) => console.error("Failed to fetch chat sessions:", error))
+        .finally(() => setIsLoadingSessions(false));
+    } else {
+      setIsLoadingSessions(false);
+    }
+  }, [clientUserId, settings?.embedId, settings?.baseApiUrl]);
 
   const handleRecentMessageClick = (sessionId) => {
+    console.log("Messages Page, handleRecentMessageClick", sessionId);
     onNavigate(`chat/${sessionId}`);
   };
 
@@ -50,7 +82,9 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
     <div className="allm-h-full allm-inline-flex allm-flex-col allm-justify-between allm-items-start">
       {/* Header */}
       <div className="allm-self-stretch allm-px-16 allm-py-6 allm-border-b-[0.5px] allm-border-subtitle allm-flex allm-flex-col allm-justify-center allm-items-center allm-gap-3 allm-overflow-hidden">
-        <div className="allm-text-center allm-justify-start allm-text-black-text allm-text-xl allm-font-normal">{mergedSettings.pageTitle}</div>
+        <div className="allm-text-center allm-justify-start allm-text-black-text allm-text-xl allm-font-normal">
+          {mergedSettings.pageTitle}
+        </div>
       </div>
 
       {/* Main content area - REFACTORED WITH FLEXBOX */}
@@ -61,9 +95,11 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
           {/* Padding added for content spacing */}
           {/* Recent Message Card */}
           {/* Assuming you might map over a list of messages here. For a single item: */}
+
+          {/* TODO: map over all chats them use key session id in handleRecentMessageClick*/}
           <div
             className="allm-w-[--var(100%-24px)] allm-px-3 allm-py-4 allm-border-b-[0.20px] allm-border-subtitle allm-flex allm-justify-start allm-items-center allm-gap-3 allm-cursor-pointer hover:allm-bg-gray-100" // Use w-full, adjusted padding, added hover
-            onClick={() => handleRecentMessageClick(mergedSettings.recentMessageData.sessionId)}
+            onClick={() => handleRecentMessageClick(chatSessions[0].session_id)}
           >
             <div className="allm-w-10 allm-h-10 allm-relative allm-overflow-hidden allm-flex-shrink-0">
               {/* Make avatar round, prevent shrinking */}
@@ -75,7 +111,8 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
             </div>
             <div className="allm-flex allm-flex-col allm-flex-grow allm-min-w-0">
               <div className="allm-justify-start allm-text-black-text allm-text-base allm-font-normal allm-leading-snug allm-truncate">
-                {mergedSettings.recentMessageData.sender} - {mergedSettings.recentMessageData.timeAgo}
+                {mergedSettings.recentMessageData.sender} -{" "}
+                {mergedSettings.recentMessageData.timeAgo}
               </div>
               <div className="allm-justify-start allm-text-subtitle allm-text-sm allm-font-normal allm-leading-snug allm-truncate">
                 {/* Made subtitle smaller */}
@@ -84,7 +121,13 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
             </div>
             <div className="allm-relative allm-ml-auto allm-flex-shrink-0">
               {/* Prevent arrow from shrinking */}
-              <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="20"
+                height="18"
+                viewBox="0 0 20 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M7.59636 15.5025C7.44019 15.5025 7.28401 15.45 7.16071 15.3375C6.92234 15.12 6.92234 14.76 7.16071 14.5425L12.52 9.6525C12.9146 9.2925 12.9146 8.7075 12.52 8.3475L7.16071 3.4575C6.92234 3.24 6.92234 2.88 7.16071 2.6625C7.39909 2.445 7.79364 2.445 8.03201 2.6625L13.3913 7.5525C13.8105 7.935 14.0489 8.4525 14.0489 9C14.0489 9.5475 13.8188 10.065 13.3913 10.4475L8.03201 15.3375C7.90872 15.4425 7.75254 15.5025 7.59636 15.5025Z"
                   fill="#1C1C1C"
@@ -99,11 +142,19 @@ const MessagesPage = ({ onNavigate, activeScreen, settings, onStartNewChat }) =>
           {/* Added padding and optional border */}
           <div
             className="allm-px-6 allm-py-3 allm-bg-black-text allm-rounded-lg allm-inline-flex allm-justify-center allm-items-center allm-gap-3 allm-cursor-pointer hover:allm-bg-gray-800" // Centered button, adjusted padding, added hover
-            onClick={handleAskQuestionClick}
+            onClick={onStartNewChat}
           >
-            <div className="allm-justify-start allm-pe-4 allm-text-white-text allm-text-sm allm-font-semibold">{mergedSettings.askQuestionText}</div>
+            <div className="allm-justify-start allm-pe-4 allm-text-white-text allm-text-sm allm-font-semibold">
+              {mergedSettings.askQuestionText}
+            </div>
             <div className="allm-relative">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M9.44476 17.4435L9.43651 17.445L9.38326 17.4713L9.36826 17.4743L9.35776 17.4713L9.30451 17.445C9.29651 17.4425 9.29051 17.4438 9.28651 17.4488L9.28351 17.4563L9.27076 17.7773L9.27451 17.7923L9.28201 17.802L9.36001 17.8575L9.37126 17.8605L9.38026 17.8575L9.45826 17.802L9.46726 17.79L9.47026 17.7773L9.45751 17.457C9.45551 17.449 9.45126 17.4445 9.44476 17.4435ZM9.64351 17.3588L9.63376 17.3603L9.49501 17.43L9.48751 17.4375L9.48526 17.4458L9.49876 17.7683L9.50251 17.7773L9.50851 17.7825L9.65926 17.8523C9.66876 17.8548 9.67601 17.8528 9.68101 17.8463L9.68401 17.8358L9.65851 17.3753C9.65601 17.3663 9.65101 17.3608 9.64351 17.3588ZM9.10726 17.3603C9.10395 17.3583 9.1 17.3576 9.09623 17.3585C9.09246 17.3593 9.08915 17.3616 9.08701 17.3648L9.08251 17.3753L9.05701 17.8358C9.05751 17.8448 9.06176 17.8508 9.06976 17.8538L9.08101 17.8523L9.23176 17.7825L9.23926 17.7765L9.24226 17.7683L9.25501 17.4458L9.25276 17.4368L9.24526 17.4293L9.10726 17.3603Z"
                   fill="#FAFAFA"

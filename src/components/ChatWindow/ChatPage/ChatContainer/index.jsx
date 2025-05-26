@@ -5,7 +5,15 @@ import ChatHistory from "@/components/ChatWindow/ChatPage/ChatContainer/ChatHist
 
 export const SEND_TEXT_EVENT = "anythingllm-embed-send-prompt";
 
-export default function ChatContainer({ sessionId, settings, chatHistory, setChatHistory, loadingResponse, setLoadingResponse }) {
+export default function ChatContainer({
+  sessionId,
+  settings,
+  clientUserId,
+  chatHistory,
+  setChatHistory,
+  loadingResponse,
+  setLoadingResponse,
+}) {
   useEffect(() => {
     async function fetchReply() {
       const promptMessage = chatHistory.length > 0 ? chatHistory[chatHistory.length - 1] : null;
@@ -17,8 +25,13 @@ export default function ChatContainer({ sessionId, settings, chatHistory, setCha
         return;
       }
 
-      await ChatService.streamChat(sessionId, settings, promptMessage.userMessage, (chatResult) =>
-        handleChat(chatResult, setLoadingResponse, setChatHistory, remHistory, _chatHistory)
+      await ChatService.streamChat(
+        sessionId,
+        settings,
+        promptMessage.userMessage,
+        (chatResult) =>
+          handleChat(chatResult, setLoadingResponse, setChatHistory, remHistory, _chatHistory),
+        clientUserId
       );
     }
 
